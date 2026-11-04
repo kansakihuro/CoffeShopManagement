@@ -1,50 +1,120 @@
-﻿@model CoffeShopManagement.Models.Product
+﻿
+@model CoffeShopManagement.Models.Product
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết sản phẩm";
 }
 
-<h2>Details</h2>
+<style>
+    .detail-container {
+        max-width: 650px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ProductName)
-        </dt>
+    .detail-title {
+        color: #6f452c;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
 
-        <dd>
+    .detail-subtitle {
+        color: #888;
+        margin-bottom: 25px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 5px;
+        border-bottom: 1px solid #eadfD2;
+    }
+
+    .detail-label {
+        color: #79543b;
+        font-weight: 600;
+    }
+
+    .detail-value {
+        color: #333;
+        text-align: right;
+    }
+
+    .detail-actions {
+        margin-top: 25px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background: #8b5e3c;
+        color: white;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        background: #e8dfd5;
+        color: #5c4030;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-edit:hover {
+        background: #70472e;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: #d8cabb;
+        color: #5c4030;
+        text-decoration: none;
+    }
+</style>
+
+<div class="detail-container">
+    <h2 class="detail-title">Chi tiết sản phẩm</h2>
+    <p class="detail-subtitle">Thông tin sản phẩm trong cửa hàng</p>
+
+    <div class="detail-row">
+        <span class="detail-label">Tên sản phẩm</span>
+        <span class="detail-value">
             @Html.DisplayFor(model => model.ProductName)
-        </dd>
+        </span>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-
-        <dd>
+    <div class="detail-row">
+        <span class="detail-label">Giá sản phẩm</span>
+        <span class="detail-value">
             @Html.DisplayFor(model => model.Price)
-        </dd>
+        </span>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </dt>
+    <div class="detail-row">
+        <span class="detail-label">Trạng thái</span>
+        <span class="detail-value">
+            @(Model.IsActive ? "Đang kinh doanh" : "Ngừng kinh doanh")
+        </span>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsActive)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </dt>
-
-        <dd>
+    <div class="detail-row">
+        <span class="detail-label">Danh mục</span>
+        <span class="detail-value">
             @Html.DisplayFor(model => model.Category.CategoryName)
-        </dd>
+        </span>
+    </div>
 
-    </dl>
+    <div class="detail-actions">
+        @Html.ActionLink("Chỉnh sửa", "Edit",
+            new { id = Model.ProductID }, new { @class = "btn-edit" })
+
+        @Html.ActionLink("Quay lại", "Index",
+            null, new { @class = "btn-back" })
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

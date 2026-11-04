@@ -1,0 +1,65 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.CafeTable>
+
+@{
+    ViewBag.Title = "Quản lý bàn";
+}
+
+<div style="background-color: #f8f3eb; padding: 25px; border-radius: 12px;">
+
+    <h2 style="color: #5c4033; font-weight: bold;">Quản lý bàn</h2>
+
+    <p>
+        @Html.ActionLink("＋ Thêm bàn mới", "Create", null,
+            new { @class = "btn", style = "background-color: #795548; color: white; border-radius: 6px; padding: 8px 15px;" })
+    </p>
+
+    @using (Html.BeginForm("Index", "CafeTables", FormMethod.Get))
+    {
+        <div style="display: flex; gap: 8px; margin: 18px 0;">
+            <input type="text"
+                   name="searchString"
+                   placeholder="Tìm theo tên bàn, trạng thái hoặc khu vực..."
+                   class="form-control"
+                   style="max-width: 400px;"
+                   value="@Request.QueryString["searchString"]" />
+
+            <button type="submit"
+                    class="btn"
+                    style="background-color: #795548; color: white;">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Xóa lọc", "Index", null,
+                new { @class = "btn btn-default" })
+        </div>
+    }
+
+    <table class="table table-bordered table-hover" style="background-color: white;">
+        <thead style="background-color: #795548; color: white;">
+            <tr>
+                <th>Tên bàn</th>
+                <th>Trạng thái</th>
+                <th>Khu vực</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.TableName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TableStatus)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Area.AreaName)</td>
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.TableID }) |
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.TableID }) |
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.TableID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,117 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.Area>
+
+@{
+    ViewBag.Title = "Quản lý khu vực";
+}
+
+<style>
+    .area-container {
+        margin: 30px auto;
+        padding: 25px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .area-title {
+        color: #6f452c;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .btn-create {
+        display: inline-block;
+        background: #8b5e3c;
+        color: white;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+
+    .area-table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+    }
+
+        .area-table th {
+            background: #79543b;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        .area-table td {
+            padding: 13px;
+            border-bottom: 1px solid #eadfd2;
+            color: #444;
+        }
+
+        .area-table tr:hover {
+            background: #f8f0e6;
+        }
+
+    .action-link {
+        color: #8b5e3c;
+        font-weight: 600;
+        text-decoration: none;
+        margin-right: 8px;
+    }
+</style>
+
+<div class="area-container">
+    <h2 class="area-title">Quản lý khu vực</h2>
+
+    @using (Html.BeginForm("Index", "Areas", FormMethod.Get))
+    {
+        <div style="margin-bottom: 20px;">
+            <input type="text"
+                   name="searchString"
+                   value="@Request.QueryString["searchString"]"
+                   placeholder="Nhập tên khu vực cần tìm..."
+                   style="padding: 9px; width: 280px; border: 1px solid #d6c2ae; border-radius: 6px;" />
+
+            <button type="submit"
+                    style="padding: 9px 16px; background: #8b5e3c; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Làm mới", "Index", null,
+                new { style = "margin-left: 8px; color: #8b5e3c;" })
+        </div>
+    }
+
+    @Html.ActionLink("＋ Thêm khu vực", "Create",
+        null, new { @class = "btn-create" })
+
+    <div style="overflow-x: auto;">
+        <table class="area-table">
+            <tr>
+                <th>Tên khu vực</th>
+                <th>Thao tác</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.AreaName)</td>
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit",
+                            new { id = item.AreaID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Chi tiết", "Details",
+                            new { id = item.AreaID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Xóa", "Delete",
+                            new { id = item.AreaID },
+                            new { @class = "action-link" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

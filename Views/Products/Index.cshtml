@@ -1,51 +1,246 @@
-﻿@model IEnumerable<CoffeShopManagement.Models.Product>
+﻿
+@model IEnumerable<CoffeShopManagement.Models.Product>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quản lý sản phẩm";
 }
 
-<h2>Index</h2>
+<style>
+    .product-page {
+        color: #44332b;
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ProductName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </th>
-        <th></th>
-    </tr>
+    .product-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category.CategoryName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProductID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProductID })
-        </td>
-    </tr>
-}
+        .product-header h2 {
+            margin: 0;
+            color: #4b3026;
+            font-weight: bold;
+        }
 
-</table>
+    .search-box {
+        background: #f8f5f0;
+        padding: 18px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+        .search-form input,
+        .search-form select {
+            height: 40px;
+        }
+
+            .search-form input[type="text"] {
+                flex: 2;
+            }
+
+        .search-form select {
+            flex: 1;
+        }
+
+    .btn-coffee {
+        background: #6b4535;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+        .btn-coffee:hover {
+            background: #4b3026;
+            color: white;
+            text-decoration: none;
+        }
+
+    .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+        .product-table th {
+            background: #4b3026;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        .product-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee5dd;
+            vertical-align: middle;
+        }
+
+        .product-table tr:hover {
+            background: #faf6f1;
+        }
+
+    .action-link a {
+        margin-right: 8px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .edit-link {
+        color: #b07836;
+    }
+
+    .detail-link {
+        color: #397c91;
+    }
+
+    .delete-link {
+        color: #bd4545;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    @@media (max-width: 600px) {
+        .search-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .product-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+</style>
+
+<div class="product-page">
+
+    <div class="product-header">
+        <div>
+            <h2>Quản lý sản phẩm</h2>
+            <p>Danh sách các sản phẩm của quán cà phê</p>
+        </div>
+
+        @Html.ActionLink(
+            "+ Thêm sản phẩm",
+            "Create",
+            "Products",
+            null,
+            new { @class = "btn-coffee" }
+        )
+    </div>
+
+    <div class="search-box">
+        @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+        {
+            <div class="search-form">
+
+                @Html.TextBox(
+                    "searchString",
+                    Request.QueryString["searchString"],
+                    new
+                         {
+                        @class = "form-control",
+                        placeholder = "Nhập tên sản phẩm cần tìm..."
+                    }
+                )
+
+                @Html.DropDownList(
+                    "categoryId",
+                    (SelectList)ViewBag.CategoryID,
+                    "Tất cả danh mục",
+                    new { @class = "form-control" }
+                )
+
+                <button type="submit" class="btn-coffee">
+                    Tìm kiếm
+                </button>
+
+            </div>
+        }
+    </div>
+
+    <div class="table-wrapper">
+        <table class="product-table">
+
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th>Danh mục</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.ProductName)</strong>
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price) đ
+                        </td>
+
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span style="color:green;font-weight:bold">
+                                    Đang bán
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color:red;font-weight:bold">
+                                    Ngừng bán
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                        </td>
+
+                        <td class="action-link">
+                            @Html.ActionLink(
+                                "Sửa",
+                                "Edit",
+                                new { id = item.ProductID },
+                                new { @class = "edit-link" }
+                            )
+
+                            @Html.ActionLink(
+                                "Chi tiết",
+                                "Details",
+                                new { id = item.ProductID },
+                                new { @class = "detail-link" }
+                            )
+
+                            @Html.ActionLink(
+                                "Xóa",
+                                "Delete",
+                                new { id = item.ProductID },
+                                new { @class = "delete-link" }
+                            )
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,71 @@
+﻿
+@model CoffeShopManagement.Models.Order
+
+@{
+    ViewBag.Title = "Xóa đơn hàng";
+}
+
+<h2>Xóa đơn hàng</h2>
+
+<h3 class="text-danger">
+    Bạn có chắc chắn muốn xóa đơn hàng này không?
+</h3>
+
+<div class="form-horizontal">
+    <hr />
+
+    <dl class="dl-horizontal">
+
+        <dt>Mã đơn hàng</dt>
+        <dd>@Model.OrderID</dd>
+
+        <dt>Loại đơn</dt>
+        <dd>@Model.OrderType</dd>
+
+        <dt>Trạng thái</dt>
+        <dd>@Model.OrderStatus</dd>
+
+        <dt>Thời gian tạo</dt>
+        <dd>@Model.CreatedAt</dd>
+
+        <dt>Thời gian hoàn thành</dt>
+        <dd>
+            @(Model.CompletedAt.HasValue
+                ? Model.CompletedAt.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                : "Chưa hoàn thành")
+        </dd>
+
+        <dt>Ghi chú</dt>
+        <dd>@Model.Notes</dd>
+
+        <dt>Bàn</dt>
+        <dd>
+            @(Model.CafeTable != null
+                ? Model.CafeTable.TableName
+                : "Không có bàn (Mang đi)")
+        </dd>
+
+        <dt>Nhân viên</dt>
+        <dd>
+            @(Model.Staff != null
+                ? Model.Staff.FullName
+                : "Chưa xác định")
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="submit" value="Xác nhận xóa"
+               class="btn btn-danger" />
+
+        @Html.ActionLink(
+            "Quay lại",
+            "Index",
+            null,
+            new { @class = "btn btn-default" }
+        )
+    }
+</div>

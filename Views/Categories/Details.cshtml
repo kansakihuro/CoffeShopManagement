@@ -1,0 +1,134 @@
+﻿
+@model CoffeShopManagement.Models.Category
+
+@{
+    ViewBag.Title = "Chi tiết danh mục";
+}
+
+<style>
+    .detail-container {
+        max-width: 650px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .detail-title {
+        color: #6f452c;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .detail-subtitle {
+        color: #888;
+        margin-bottom: 25px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 15px 5px;
+        border-bottom: 1px solid #eadfd2;
+    }
+
+    .detail-label {
+        color: #79543b;
+        font-weight: 600;
+    }
+
+    .detail-value {
+        color: #333;
+        text-align: right;
+    }
+
+    .status-active {
+        color: #38834a;
+        font-weight: 600;
+    }
+
+    .status-inactive {
+        color: #a94442;
+        font-weight: 600;
+    }
+
+    .detail-actions {
+        margin-top: 25px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background: #8b5e3c;
+        color: white;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        background: #e8dfd5;
+        color: #5c4030;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-edit:hover {
+        background: #70472e;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: #d8cabb;
+        color: #5c4030;
+        text-decoration: none;
+    }
+</style>
+
+<div class="detail-container">
+    <h2 class="detail-title">Chi tiết danh mục</h2>
+    <p class="detail-subtitle">
+        Thông tin danh mục sản phẩm
+    </p>
+
+    <div class="detail-row">
+        <span class="detail-label">Tên danh mục</span>
+        <span class="detail-value">
+            @Html.DisplayFor(model => model.CategoryName)
+        </span>
+    </div>
+
+    <div class="detail-row">
+        <span class="detail-label">Mô tả</span>
+        <span class="detail-value">
+            @Html.DisplayFor(model => model.Description)
+        </span>
+    </div>
+
+    <div class="detail-row">
+        <span class="detail-label">Trạng thái</span>
+        <span class="detail-value">
+            @if (Model.IsActive)
+            {
+                <span class="status-active">Đang hoạt động</span>
+            }
+            else
+            {
+                <span class="status-inactive">Ngừng hoạt động</span>
+            }
+        </span>
+    </div>
+
+    <div class="detail-actions">
+        @Html.ActionLink("Chỉnh sửa", "Edit",
+            new { id = Model.CategoryID },
+            new { @class = "btn-edit" })
+
+        @Html.ActionLink("Quay lại", "Index",
+            null, new { @class = "btn-back" })
+    </div>
+</div>

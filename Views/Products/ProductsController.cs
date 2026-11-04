@@ -15,9 +15,28 @@ namespace CoffeShopManagement.Controllers
         private CoffeeShopManagementDBEntities db = new CoffeeShopManagementDBEntities();
 
         // GET: Products
-        public ActionResult Index()
+        public ActionResult Index(string searchString, int? categoryId)
         {
             var products = db.Products.Include(p => p.Category);
+
+            // Tìm kiếm theo tên
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p =>
+                    p.ProductName.Contains(searchString));
+            }
+
+            // Lọc theo danh mục
+            if (categoryId != null)
+            {
+                products = products.Where(p =>
+                    p.CategoryID == categoryId);
+            }
+
+            // Danh sách danh mục cho dropdown
+            ViewBag.CategoryID = new SelectList(
+                db.Categories, "CategoryID", "CategoryName", categoryId);
+
             return View(products.ToList());
         }
 

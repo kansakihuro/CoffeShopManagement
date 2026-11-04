@@ -1,0 +1,134 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.Staff>
+
+@{
+    ViewBag.Title = "Quản lý nhân viên";
+}
+
+<style>
+    .staff-container {
+        margin: 30px auto;
+        padding: 25px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .staff-title {
+        color: #6f452c;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .btn-create {
+        display: inline-block;
+        background: #8b5e3c;
+        color: white;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+
+    .staff-table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+    }
+
+        .staff-table th {
+            background: #79543b;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        .staff-table td {
+            padding: 13px;
+            border-bottom: 1px solid #eadfd2;
+            color: #444;
+        }
+
+        .staff-table tr:hover {
+            background: #f8f0e6;
+        }
+
+    .action-link {
+        color: #8b5e3c;
+        font-weight: 600;
+        text-decoration: none;
+        margin-right: 8px;
+    }
+</style>
+
+<div class="staff-container">
+    <h2 class="staff-title">Quản lý nhân viên</h2>
+
+    @using (Html.BeginForm("Index", "Staffs", FormMethod.Get))
+    {
+        <div style="margin-bottom: 20px;">
+            <input type="text"
+                   name="searchString"
+                   value="@Request.QueryString["searchString"]"
+                   placeholder="Tìm theo tên, số điện thoại hoặc email..."
+                   style="padding: 9px; width: 320px; border: 1px solid #d6c2ae; border-radius: 6px;" />
+
+            <button type="submit"
+                    style="padding: 9px 16px; background: #8b5e3c; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Làm mới", "Index", null,
+                new { style = "margin-left: 8px; color: #8b5e3c;" })
+        </div>
+    }
+
+    @Html.ActionLink("＋ Thêm nhân viên", "Create",
+        null, new { @class = "btn-create" })
+
+    <div style="overflow-x: auto;">
+        <table class="staff-table">
+            <tr>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Chức vụ</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span style="color: #38834a; font-weight: 600;">Đang hoạt động</span>
+                        }
+                        else
+                        {
+                            <span style="color: #a94442; font-weight: 600;">Ngừng hoạt động</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit",
+                            new { id = item.StaffID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Chi tiết", "Details",
+                            new { id = item.StaffID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Xóa", "Delete",
+                            new { id = item.StaffID },
+                            new { @class = "action-link" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

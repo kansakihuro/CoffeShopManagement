@@ -129,19 +129,27 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AreasController.cs" />
+    <Compile Include="Controllers\CafeTablesController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
+    <Compile Include="Controllers\StaffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Area.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AreaMetadata.cs" />
     <Compile Include="Models\CafeTable.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CafeTableMetadata.cs" />
     <Compile Include="Models\Category.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CategoryMetadata.cs" />
     <Compile Include="Models\CoffeeShopModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -166,9 +174,11 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductMetadata.cs" />
     <Compile Include="Models\Staff.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StaffMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Products\ProductsController.cs" />
   </ItemGroup>
@@ -245,6 +255,31 @@
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\Delete.cshtml" />
+    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\Staffs\Create.cshtml" />
+    <Content Include="Views\Staffs\Delete.cshtml" />
+    <Content Include="Views\Staffs\Details.cshtml" />
+    <Content Include="Views\Staffs\Edit.cshtml" />
+    <Content Include="Views\Staffs\Index.cshtml" />
+    <Content Include="Views\Areas\Create.cshtml" />
+    <Content Include="Views\Areas\Delete.cshtml" />
+    <Content Include="Views\Areas\Details.cshtml" />
+    <Content Include="Views\Areas\Edit.cshtml" />
+    <Content Include="Views\Areas\Index.cshtml" />
+    <Content Include="Views\CafeTables\Create.cshtml" />
+    <Content Include="Views\CafeTables\Delete.cshtml" />
+    <Content Include="Views\CafeTables\Details.cshtml" />
+    <Content Include="Views\CafeTables\Edit.cshtml" />
+    <Content Include="Views\CafeTables\Index.cshtml" />
+    <Content Include="Views\Orders\Create.cshtml" />
+    <Content Include="Views\Orders\Delete.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\Orders\Edit.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

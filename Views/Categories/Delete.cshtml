@@ -1,0 +1,139 @@
+﻿
+@model CoffeShopManagement.Models.Category
+
+@{
+    ViewBag.Title = "Xóa danh mục";
+}
+
+<style>
+    .delete-container {
+        max-width: 650px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .delete-title {
+        color: #8b3e32;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .delete-warning {
+        color: #a94442;
+        margin-bottom: 25px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 15px 5px;
+        border-bottom: 1px solid #eadfd2;
+    }
+
+    .detail-label {
+        color: #79543b;
+        font-weight: 600;
+    }
+
+    .detail-value {
+        color: #333;
+        text-align: right;
+    }
+
+    .status-active {
+        color: #38834a;
+        font-weight: 600;
+    }
+
+    .status-inactive {
+        color: #a94442;
+        font-weight: 600;
+    }
+
+    .delete-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .btn-delete {
+        background: #a94442;
+        color: white;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 6px;
+    }
+
+        .btn-delete:hover {
+            background: #843431;
+        }
+
+    .btn-back {
+        display: inline-block;
+        background: #e8dfd5;
+        color: #5c4030;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            background: #d8cabb;
+            color: #5c4030;
+            text-decoration: none;
+        }
+</style>
+
+<div class="delete-container">
+    <h2 class="delete-title">Xóa danh mục</h2>
+
+    <p class="delete-warning">
+        Bạn có chắc chắn muốn xóa danh mục này không?
+        Thao tác này không thể hoàn tác.
+    </p>
+
+    <div class="detail-row">
+        <span class="detail-label">Tên danh mục</span>
+        <span class="detail-value">
+            @Html.DisplayFor(model => model.CategoryName)
+        </span>
+    </div>
+
+    <div class="detail-row">
+        <span class="detail-label">Mô tả</span>
+        <span class="detail-value">
+            @Html.DisplayFor(model => model.Description)
+        </span>
+    </div>
+
+    <div class="detail-row">
+        <span class="detail-label">Trạng thái</span>
+        <span class="detail-value">
+            @if (Model.IsActive)
+            {
+                <span class="status-active">Đang hoạt động</span>
+            }
+            else
+            {
+                <span class="status-inactive">Ngừng hoạt động</span>
+            }
+        </span>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="delete-actions">
+            <input type="submit" value="Xác nhận xóa"
+                   class="btn-delete" />
+
+            @Html.ActionLink("Quay lại", "Index",
+                null, new { @class = "btn-back" })
+        </div>
+    }
+</div>

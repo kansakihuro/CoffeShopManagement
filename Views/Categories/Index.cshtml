@@ -1,0 +1,158 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.Category>
+
+@{
+    ViewBag.Title = "Quản lý danh mục";
+}
+
+<style>
+    .category-container {
+        margin: 30px auto;
+        padding: 25px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .category-title {
+        color: #6f452c;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .btn-create {
+        display: inline-block;
+        background: #8b5e3c;
+        color: white;
+        padding: 9px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+
+        .btn-create:hover {
+            background: #70472e;
+            color: white;
+            text-decoration: none;
+        }
+
+    .category-table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+    }
+
+        .category-table th {
+            background: #79543b;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        .category-table td {
+            padding: 13px;
+            border-bottom: 1px solid #eadfd2;
+            color: #444;
+        }
+
+        .category-table tr:hover {
+            background: #f8f0e6;
+        }
+
+    .action-link {
+        color: #8b5e3c;
+        font-weight: 600;
+        text-decoration: none;
+        margin-right: 8px;
+    }
+
+        .action-link:hover {
+            color: #5c3825;
+            text-decoration: underline;
+        }
+
+    .status-active {
+        color: #38834a;
+        font-weight: 600;
+    }
+
+    .status-inactive {
+        color: #a94442;
+        font-weight: 600;
+    }
+</style>
+
+<div class="category-container">
+    <h2 class="category-title">Quản lý danh mục</h2>
+
+    @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+    {
+        <div style="margin-bottom: 20px;">
+            <input type="text"
+                   name="searchString"
+                   value="@Request.QueryString["searchString"]"
+                   placeholder="Nhập tên danh mục cần tìm..."
+                   style="padding: 9px; width: 280px; border: 1px solid #d6c2ae; border-radius: 6px;" />
+
+            <button type="submit"
+                    style="padding: 9px 16px; background: #8b5e3c; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Làm mới", "Index", null,
+                new { style = "margin-left: 8px; color: #8b5e3c;" })
+        </div>
+    }
+
+    @Html.ActionLink("＋ Thêm danh mục", "Create",
+        null, new { @class = "btn-create" })
+
+    <div style="overflow-x: auto;">
+        <table class="category-table">
+            <tr>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span class="status-active">Đang hoạt động</span>
+                        }
+                        else
+                        {
+                            <span class="status-inactive">Ngừng hoạt động</span>
+                        }
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit",
+                            new { id = item.CategoryID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Chi tiết", "Details",
+                            new { id = item.CategoryID },
+                            new { @class = "action-link" })
+
+                        @Html.ActionLink("Xóa", "Delete",
+                            new { id = item.CategoryID },
+                            new { @class = "action-link" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
