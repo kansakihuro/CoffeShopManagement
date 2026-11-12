@@ -1,0 +1,99 @@
+﻿
+@model CoffeShopManagement.Models.OrderDetail
+
+@{
+    ViewBag.Title = "Thêm chi tiết đơn hàng";
+}
+
+<h2>Thêm chi tiết đơn hàng</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Thông tin chi tiết đơn hàng</h4>
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- Đơn hàng -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.OrderID, "Mã đơn hàng",
+                     new { @class = "control-label col-md-2" })
+
+            <div class="col-md-10">
+                @Html.DropDownList("OrderID", null,
+                         "-- Chọn đơn hàng --",
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.OrderID, "",
+                         new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Sản phẩm -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductID, "Sản phẩm",
+                     new { @class = "control-label col-md-2" })
+
+            <div class="col-md-10">
+                @Html.DropDownList("ProductID", null,
+                         "-- Chọn sản phẩm --",
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.ProductID, "",
+                         new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Số lượng -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, "Số lượng",
+                     new { @class = "control-label col-md-2" })
+
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Quantity,
+         new
+         {
+             @class = "form-control",
+             type = "number",
+             min = "1",
+             max = "1000",
+             step = "1",
+             placeholder = "Nhập số lượng",
+             oninvalid = "this.setCustomValidity('Số lượng phải từ 1 đến 1000')",
+             oninput = "this.setCustomValidity('')"
+         })
+
+                @Html.ValidationMessageFor(model => model.Quantity, "",
+                              new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Đơn giá -->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <p class="text-muted">
+                    Đơn giá sẽ được hệ thống tự động lấy từ giá sản phẩm.
+                </p>
+            </div>
+        </div>
+
+        <!-- Nút tạo -->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Thêm vào đơn hàng"
+                       class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Quay lại danh sách", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

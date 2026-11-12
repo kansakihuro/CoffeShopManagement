@@ -17,11 +17,39 @@ namespace CoffeShopManagement.Controllers
             new CoffeeShopManagementDBEntities();
 
         // GET: Orders
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string orderStatus, string orderType)
         {
             var orders = db.Orders
                 .Include(o => o.CafeTable)
-                .Include(o => o.Staff);
+                .Include(o => o.Staff)
+                .AsQueryable();
+
+            // Tìm kiếm theo mã đơn hàng
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                int orderID;
+
+                if (int.TryParse(searchString, out orderID))
+                {
+                    orders = orders.Where(o => o.OrderID == orderID);
+                }
+            }
+
+            // Lọc theo trạng thái
+            if (!string.IsNullOrEmpty(orderStatus))
+            {
+                orders = orders.Where(o => o.OrderStatus == orderStatus);
+            }
+
+            // Lọc theo loại đơn
+            if (!string.IsNullOrEmpty(orderType))
+            {
+                orders = orders.Where(o => o.OrderType == orderType);
+            }
+
+            ViewBag.SearchString = searchString;
+            ViewBag.OrderStatus = orderStatus;
+            ViewBag.OrderType = orderType;
 
             return View(orders.ToList());
         }
@@ -32,7 +60,11 @@ namespace CoffeShopManagement.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Order order = db.Orders.Find(id);
+            Order order = db.Orders
+                .Include(o => o.CafeTable)
+                .Include(o => o.Staff)
+                .Include(o => o.OrderDetails.Select(d => d.Product))
+                .FirstOrDefault(o => o.OrderID == id);
 
             if (order == null)
                 return HttpNotFound();
@@ -77,6 +109,21 @@ namespace CoffeShopManagement.Controllers
                     ModelState.AddModelError(
                         "TableID", "Vui lòng chọn bàn");
                 }
+                else
+                {
+                    var table = db.CafeTables.Find(order.TableID.Value);
+
+                    if (table == null)
+                    {
+                        ModelState.AddModelError(
+                            "TableID", "Bàn không tồn tại");
+                    }
+                    else if (table.TableStatus == "Occupied")
+                    {
+                        ModelState.AddModelError(
+                            "TableID", "Bàn này đang được sử dụng");
+                    }
+                }
             }
             else
             {
@@ -109,6 +156,16 @@ namespace CoffeShopManagement.Controllers
             if (ModelState.IsValid)
             {
                 db.Orders.Add(order);
+
+                // Nếu là đơn dùng tại quán và chưa hoàn thành/hủy
+                if (order.OrderType == "DineIn" &&
+                    order.OrderStatus != "Completed" &&
+                    order.OrderStatus != "Cancelled")
+                {
+                    var table = db.CafeTables.Find(order.TableID.Value);
+                    table.TableStatus = "Occupied";
+                }
+
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -145,13 +202,13 @@ namespace CoffeShopManagement.Controllers
 
         // POST: Orders/Edit/5
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-            [Bind(Include = "OrderID,StaffID,TableID,OrderType,OrderStatus,Notes")]
-    Order order)
+            [Bind(Include = "OrderID,StaffID,TableID,OrderType,OrderStatus,Notes")]Order order)
         {
-            // Lấy đơn hàng cũ từ database
+            // Lấy đơn hàng hiện tại từ database
             var existingOrder = db.Orders.Find(order.OrderID);
 
             if (existingOrder == null)
@@ -169,6 +226,23 @@ namespace CoffeShopManagement.Controllers
                     ModelState.AddModelError(
                         "TableID", "Vui lòng chọn bàn");
                 }
+                else
+                {
+                    var newTable = db.CafeTables.Find(order.TableID.Value);
+
+                    if (newTable == null)
+                    {
+                        ModelState.AddModelError(
+                            "TableID", "Bàn không tồn tại");
+                    }
+                    else if (
+                        newTable.TableStatus == "Occupied" &&
+                        existingOrder.TableID != order.TableID)
+                    {
+                        ModelState.AddModelError(
+                            "TableID", "Bàn này đang được sử dụng");
+                    }
+                }
             }
             else
             {
@@ -177,10 +251,7 @@ namespace CoffeShopManagement.Controllers
             }
 
             // Kiểm tra trạng thái
-            string[] validStatuses =
-            {
-        "New", "Preparing", "Completed", "Cancelled"
-    };
+            string[] validStatuses ={"New", "Preparing", "Completed", "Cancelled"};
 
             if (!validStatuses.Contains(order.OrderStatus))
             {
@@ -190,15 +261,42 @@ namespace CoffeShopManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                // Cập nhật thông tin
+                // Lấy bàn cũ
+                int? oldTableID = existingOrder.TableID;
+
+                // Xác định đơn mới có còn sử dụng bàn không
+                bool needsTable =
+                    order.OrderType == "DineIn" &&
+                    order.OrderStatus != "Completed" &&
+                    order.OrderStatus != "Cancelled";
+
+                // Giải phóng bàn cũ nếu đơn không còn sử dụng bàn đó
+                if (oldTableID.HasValue &&
+                    (!needsTable || oldTableID != order.TableID))
+                {
+                    var oldTable = db.CafeTables.Find(oldTableID.Value);
+
+                    if (oldTable != null)
+                    {
+                        oldTable.TableStatus = "Available";
+                    }
+                }
+
+                // Chiếm bàn mới nếu đơn vẫn đang hoạt động
+                if (needsTable && order.TableID.HasValue)
+                {
+                    var newTable = db.CafeTables.Find(order.TableID.Value);
+                    newTable.TableStatus = "Occupied";
+                }
+
+                // Cập nhật thông tin đơn hàng
                 existingOrder.StaffID = order.StaffID;
                 existingOrder.TableID = order.TableID;
                 existingOrder.OrderType = order.OrderType;
                 existingOrder.OrderStatus = order.OrderStatus;
                 existingOrder.Notes = order.Notes;
 
-                // Giữ nguyên thời gian tạo
-                // Tự động cập nhật thời gian hoàn thành
+                // Xử lý thời gian hoàn thành
                 if (order.OrderStatus == "Completed")
                 {
                     if (!existingOrder.CompletedAt.HasValue)
@@ -216,13 +314,14 @@ namespace CoffeShopManagement.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Nạp lại danh sách khi validation thất bại
             ViewBag.TableID = new SelectList(
                 db.CafeTables, "TableID", "TableName", order.TableID);
 
             ViewBag.StaffID = new SelectList(
                 db.Staffs, "StaffID", "FullName", order.StaffID);
 
-            // Giữ thời gian cũ khi hiển thị lại form
+            // Giữ thời gian cũ
             order.CreatedAt = existingOrder.CreatedAt;
             order.CompletedAt = existingOrder.CompletedAt;
 

@@ -1,69 +1,158 @@
-﻿@model IEnumerable<CoffeShopManagement.Models.Order>
+﻿
+@model IEnumerable<CoffeShopManagement.Models.Order>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quản lý đơn hàng";
 }
 
-<h2>Index</h2>
+<h2>Quản lý đơn hàng</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink(" + Tạo đơn hàng mới", "Create",
+            null, new { @class = "btn btn-primary" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompletedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Notes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CafeTable.TableName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Staff.FullName)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CompletedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Notes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CafeTable.TableName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Staff.FullName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.OrderID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.OrderID })
-        </td>
-    </tr>
+<!-- Tìm kiếm và lọc -->
+@using (Html.BeginForm("Index", "Orders", FormMethod.Get))
+{
+    <div class="row" style="margin-bottom: 20px;">
+
+        <div class="col-md-3">
+            <label>Mã đơn hàng</label>
+            <input type="text" name="searchString"
+                   value="@ViewBag.SearchString"
+                   class="form-control"
+                   placeholder="Nhập mã đơn..." />
+        </div>
+
+        <div class="col-md-3">
+            <label>Trạng thái</label>
+            <select name="orderStatus" class="form-control">
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="New"
+                        @(ViewBag.OrderStatus == "New" ? "selected" : "")>
+                    Mới
+                </option>
+                <option value="Preparing"
+                        @(ViewBag.OrderStatus == "Preparing" ? "selected" : "")>
+                    Đang chuẩn bị
+                </option>
+                <option value="Completed"
+                        @(ViewBag.OrderStatus == "Completed" ? "selected" : "")>
+                    Hoàn thành
+                </option>
+                <option value="Cancelled"
+                        @(ViewBag.OrderStatus == "Cancelled" ? "selected" : "")>
+                    Đã hủy
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Loại đơn hàng</label>
+            <select name="orderType" class="form-control">
+                <option value="">-- Tất cả loại đơn --</option>
+                <option value="DineIn"
+                        @(ViewBag.OrderType == "DineIn" ? "selected" : "")>
+                    Dùng tại quán
+                </option>
+                <option value="TakeAway"
+                        @(ViewBag.OrderType == "TakeAway" ? "selected" : "")>
+                    Mang đi
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3" style="padding-top: 25px;">
+            <button type="submit" class="btn btn-success">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Làm mới", "Index",
+                     null, new { @class = "btn btn-default" })
+        </div>
+
+    </div>
 }
 
+<!-- Danh sách đơn hàng -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Loại đơn</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th>Ngày hoàn thành</th>
+            <th>Ghi chú</th>
+            <th>Bàn</th>
+            <th>Nhân viên</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.OrderID</td>
+
+                <td>
+                    @(item.OrderType == "DineIn"
+                        ? "Dùng tại quán" : "Mang đi")
+                </td>
+
+                <td>
+                    @switch (item.OrderStatus)
+                    {
+                        case "New":
+                            @:Mới
+                            break;
+                        case "Preparing":
+                            @:Đang chuẩn bị
+                            break;
+                        case "Completed":
+                            @:Hoàn thành
+                            break;
+                        case "Cancelled":
+                            @:Đã hủy
+                            break;
+                        default:
+                            @item.OrderStatus
+                            break;
+                    }
+                </td>
+
+                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.CompletedAt)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+
+                <td>
+                    @(item.CafeTable != null
+                        ? item.CafeTable.TableName : "Không có bàn")
+                </td>
+
+                <td>
+                    @(item.Staff != null
+                        ? item.Staff.FullName : "")
+                </td>
+
+                <td>
+                    @Html.ActionLink("Sửa", "Edit",
+                             new { id = item.OrderID }) |
+                    @Html.ActionLink("Chi tiết", "Details",
+                             new { id = item.OrderID }) |
+                    @Html.ActionLink("Xóa", "Delete",
+                             new { id = item.OrderID })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+@if (!Model.Any())
+{
+    <p class="text-danger">Không tìm thấy đơn hàng phù hợp.</p>
+}

@@ -10,114 +10,264 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f8f5f0;
-            color: #3e3028;
+            margin: 0;
+            background: #F8F5F0;
+            color: #3E3028;
             font-family: Arial, sans-serif;
         }
 
-        .navbar {
-            background-color: #4b3026 !important;
-            border: none;
-            border-radius: 0;
-            margin-bottom: 30px;
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #4B3026;
+            padding: 25px 16px;
+            z-index: 1000;
+            overflow-y: auto;
         }
 
-        .navbar-brand {
-            color: #f5dfc4 !important;
-            font-weight: bold;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 12px 30px;
+            color: #F5DFC4;
             font-size: 21px;
+            font-weight: bold;
+            text-decoration: none;
         }
 
-        .navbar-nav > li > a {
-            color: #f5dfc4 !important;
-        }
-
-            .navbar-nav > li > a:hover {
-                color: white !important;
-                background-color: #684536 !important;
+            .brand:hover {
+                color: white;
+                text-decoration: none;
             }
 
-        .body-content {
-            background-color: white;
-            padding: 30px;
+        .brand-icon {
+            background: #684536;
+            padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            min-height: 450px;
         }
 
-        h2 {
-            color: #4b3026;
+        .sidebar-label {
+            color: #BFA99A;
+            font-size: 11px;
             font-weight: bold;
-            margin-bottom: 25px;
+            letter-spacing: 1.2px;
+            padding: 12px 13px;
         }
 
-        footer {
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .sidebar-menu li {
+                margin-bottom: 5px;
+            }
+
+            .sidebar-menu a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 14px;
+                border-radius: 8px;
+                color: #E8D9CB;
+                text-decoration: none;
+                font-size: 14px;
+                transition: 0.2s;
+            }
+
+                .sidebar-menu a:hover {
+                    background: #684536;
+                    color: white;
+                }
+
+                .sidebar-menu a.active {
+                    background: #F5DFC4;
+                    color: #4B3026;
+                    font-weight: bold;
+                }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* MAIN CONTENT */
+        .main-wrapper {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-bottom: 1px solid #EEE6DE;
+        }
+
+        .topbar-title {
+            color: #4B3026;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .admin-info {
+            color: #795548;
+            font-size: 13px;
+            background: #F8F5F0;
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .page-footer {
             margin-top: 30px;
-            color: #8b776b;
+            padding: 20px 0;
+            border-top: 1px solid #E9DED4;
+            color: #9A887C;
+            font-size: 13px;
+        }
+
+        h2, h3 {
+            color: #4B3026;
+        }
+
+        /* RESPONSIVE */
+        @@media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-menu {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content-area {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark">
-        <div class="container">
 
-            @Html.ActionLink(
-                "☕ Coffee Shop",
-                "Index",
-                "Products",
-                new { area = "" },
-                new { @class = "navbar-brand" }
-            )
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-            <button type="button"
-                    class="navbar-toggler"
-                    data-bs-toggle="collapse"
-                    data-bs-target=".navbar-collapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        @Html.ActionLink(
+                 "☕ Coffee Shop",
+                 "Index",
+                 "Home",
+                 null,
+                 new { @class = "brand" }
+             )
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav flex-grow-1">
+        <div class="sidebar-label">TỔNG QUAN</div>
 
-                    <li>
-                        @Html.ActionLink(
-                            "Sản phẩm",
-                            "Index",
-                            "Products",
-                            new { area = "" },
-                            new { @class = "nav-link" }
-                        )
-                    </li>
+        <ul class="sidebar-menu">
+            <li>
+                @Html.ActionLink(
+         "▦  Dashboard",
+         "Index", "Home",
+         null,
+         new
+         {
+             @class = ViewContext.RouteData.Values["controller"].ToString() == "Home"
+                 ? "active" : ""
+         }
+     )
+            </li>
+        </ul>
 
-                    <li>
-                        @Html.ActionLink(
-                            "Trang chủ",
-                            "Index",
-                            "Home",
-                            new { area = "" },
-                            new { @class = "nav-link" }
-                        )
-                    </li>
+        <div class="sidebar-label">QUẢN LÝ</div>
 
-                </ul>
+        <ul class="sidebar-menu">
+            <li>
+                @Html.ActionLink("📋  Đơn hàng", "Index", "Orders")
+            </li>
+            <li>
+                @Html.ActionLink("🪑  Quản lý bàn", "Index", "CafeTables")
+            </li>
+            <li>
+                @Html.ActionLink("☕  Sản phẩm", "Index", "Products")
+            </li>
+            <li>
+                @Html.ActionLink("📂  Danh mục", "Index", "Categories")
+            </li>
+            <li>
+                @Html.ActionLink("👥  Nhân viên", "Index", "Staffs")
+            </li>
+            <li>
+                @Html.ActionLink("🏠  Khu vực", "Index", "Areas")
+            </li>
+        </ul>
+
+        <div class="sidebar-label">THỐNG KÊ</div>
+
+        <ul class="sidebar-menu">
+            <li>
+                @Html.ActionLink("📊  Báo cáo doanh thu", "Index", "Revenue")
+            </li>
+        </ul>
+
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-wrapper">
+
+        <header class="topbar">
+            <div class="topbar-title">
+                @ViewBag.Title
             </div>
-        </div>
-    </nav>
 
-    <div class="container body-content">
-        @RenderBody()
+            <div class="admin-info">
+                ☕ Coffee Shop Management
+            </div>
+        </header>
 
-        <hr />
+        <main class="content-area">
+            @RenderBody()
 
-        <footer>
-            <p>&copy; @DateTime.Now.Year Coffee Shop Management</p>
-        </footer>
+            <footer class="page-footer">
+                &copy; @DateTime.Now.Year Coffee Shop Management
+                <span style="float: right;">Made with ☕</span>
+            </footer>
+        </main>
+
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

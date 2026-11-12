@@ -2,7 +2,7 @@
 @model CoffeShopManagement.Models.Order
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa đơn hàng";
 }
 
 <h2>Chỉnh sửa đơn hàng</h2>
@@ -12,63 +12,88 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Order</h4>
+        <h4>Thông tin đơn hàng</h4>
         <hr />
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.OrderID)
 
+        <!-- Nhân viên -->
         <div class="form-group">
             @Html.LabelFor(model => model.StaffID, "Nhân viên",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 @Html.DropDownList("StaffID", null,
-                    new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.StaffID,
-                    "", new { @class = "text-danger" })
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.StaffID, "",
+                         new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
+        <!-- Bàn -->
+        <div class="form-group" id="tableField">
             @Html.LabelFor(model => model.TableID, "Bàn",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 @Html.DropDownList("TableID", null,
-                    "-- Không chọn bàn --",
-                    new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TableID,
-                    "", new { @class = "text-danger" })
+                         "-- Không chọn bàn --",
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.TableID, "",
+                         new { @class = "text-danger" })
             </div>
         </div>
 
+        <!-- Loại đơn -->
         <div class="form-group">
             @Html.LabelFor(model => model.OrderType, "Loại đơn",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderType,
-                    new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OrderType,
-                    "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.OrderType,
+                         new SelectList(new[]
+                         {
+                        new { Value = "DineIn", Text = "Dùng tại quán" },
+                        new { Value = "TakeAway", Text = "Mang đi" }
+                         }, "Value", "Text", Model.OrderType),
+                         "-- Chọn loại đơn --",
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.OrderType, "",
+                         new { @class = "text-danger" })
             </div>
         </div>
 
+        <!-- Trạng thái -->
         <div class="form-group">
             @Html.LabelFor(model => model.OrderStatus, "Trạng thái",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.OrderStatus,
-                    new SelectList(
-                        new[] { "New", "Preparing", "Completed", "Cancelled" },
-                        Model.OrderStatus),
-                    new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.OrderStatus,
-                    "", new { @class = "text-danger" })
+                         new SelectList(new[]
+                         {
+                        new { Value = "New", Text = "Mới" },
+                        new { Value = "Preparing", Text = "Đang chuẩn bị" },
+                        new { Value = "Completed", Text = "Hoàn thành" },
+                        new { Value = "Cancelled", Text = "Đã hủy" }
+                         }, "Value", "Text", Model.OrderStatus),
+                         "-- Chọn trạng thái --",
+                         new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.OrderStatus, "",
+                         new { @class = "text-danger" })
             </div>
         </div>
 
+        <!-- Thời gian tạo -->
         <div class="form-group">
             @Html.LabelFor(model => model.CreatedAt, "Thời gian tạo",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 <p class="form-control-static">
                     @Html.DisplayFor(model => model.CreatedAt)
@@ -76,9 +101,11 @@
             </div>
         </div>
 
+        <!-- Thời gian hoàn thành -->
         <div class="form-group">
             @Html.LabelFor(model => model.CompletedAt, "Thời gian hoàn thành",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 <p class="form-control-static">
                     @(Model.CompletedAt.HasValue
@@ -88,20 +115,24 @@
             </div>
         </div>
 
+        <!-- Ghi chú -->
         <div class="form-group">
             @Html.LabelFor(model => model.Notes, "Ghi chú",
-                new { @class = "control-label col-md-2" })
+                     new { @class = "control-label col-md-2" })
+
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Notes,
-                    new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Notes,
-                    "", new { @class = "text-danger" })
+                         new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(model => model.Notes, "",
+                         new { @class = "text-danger" })
             </div>
         </div>
 
+        <!-- Nút lưu -->
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save"
+                <input type="submit" value="Lưu thay đổi"
                        class="btn btn-primary" />
             </div>
         </div>
@@ -109,9 +140,30 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Quay lại danh sách", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>$(document).ready(function () {
+
+            function toggleTableField() {
+                var orderType = $("#OrderType").val();
+
+                if (orderType === "TakeAway") {
+                    $("#tableField").hide();
+                    $("#TableID").val("");
+                }
+                else {
+                    $("#tableField").show();
+                }
+            }
+
+            toggleTableField();
+
+            $("#OrderType").change(function () {
+                toggleTableField();
+            });
+        });</script>
 }

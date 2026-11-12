@@ -50,7 +50,32 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.TableName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TableStatus)</td>
+                    <td>
+                        @if (item.TableStatus == "Available")
+                        {
+                            <span style="background-color: #d4edda;
+                     color: #155724;
+                     padding: 5px 12px;
+                     border-radius: 15px;
+                     font-weight: bold;">
+                                Còn trống
+                            </span>
+                        }
+                        else if (item.TableStatus == "Occupied")
+                        {
+                            <span style="background-color: #f8d7da;
+                     color: #721c24;
+                     padding: 5px 12px;
+                     border-radius: 15px;
+                     font-weight: bold;">
+                                Đang sử dụng
+                            </span>
+                        }
+                        else
+                        {
+                            @item.TableStatus
+                        }
+                    </td>
                     <td>@Html.DisplayFor(modelItem => item.Area.AreaName)</td>
                     <td>
                         @Html.ActionLink("Sửa", "Edit", new { id = item.TableID }) |

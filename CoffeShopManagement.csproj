@@ -133,7 +133,9 @@
     <Compile Include="Controllers\CafeTablesController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrderDetailsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
+    <Compile Include="Controllers\RevenueController.cs" />
     <Compile Include="Controllers\StaffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -171,10 +173,12 @@
     <Compile Include="Models\OrderDetail.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderDetailMetadata.cs" />
     <Compile Include="Models\Product.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductMetadata.cs" />
+    <Compile Include="Models\RevenueViewModel.cs" />
     <Compile Include="Models\Staff.cs">
       <DependentUpon>CoffeeShopModel.tt</DependentUpon>
     </Compile>
@@ -280,6 +284,12 @@
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\OrderDetails\Create.cshtml" />
+    <Content Include="Views\OrderDetails\Delete.cshtml" />
+    <Content Include="Views\OrderDetails\Details.cshtml" />
+    <Content Include="Views\OrderDetails\Edit.cshtml" />
+    <Content Include="Views\OrderDetails\Index.cshtml" />
+    <Content Include="Views\Revenue\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

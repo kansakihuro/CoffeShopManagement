@@ -1,0 +1,100 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.RevenueViewModel>
+
+@{
+    ViewBag.Title = "Báo cáo doanh thu";
+    decimal totalRevenue = Model.Sum(x => x.DoanhThu);
+}
+
+<div style="background-color: #f8f3eb; padding: 25px; border-radius: 12px;">
+
+    <h2 style="color: #5c4033; font-weight: bold;">
+        Báo cáo doanh thu
+    </h2>
+
+    <div style="background-color: white; padding: 20px;
+                border-radius: 10px; margin: 20px 0;">
+        <h4 style="color: #795548;">Tổng doanh thu</h4>
+        <h2 style="color: #2e7d32; font-weight: bold;">
+            @totalRevenue.ToString("N0") đ
+        </h2>
+    </div>
+
+
+    <h3 style="color: #5c4033;">Doanh thu theo ngày</h3>
+
+    @using (Html.BeginForm("Index", "Revenue", FormMethod.Get))
+    {
+        <div style="display: flex; gap: 10px; margin: 18px 0; align-items: center;">
+
+            <select name="month" class="form-control" style="max-width: 150px;">
+                <option value="">Tất cả tháng</option>
+
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i"
+                            @(ViewBag.SelectedMonth != null && (int)ViewBag.SelectedMonth == i ? "selected" : "")>
+                        Tháng @i
+                    </option>
+                }
+            </select>
+
+            <select name="year" class="form-control" style="max-width: 150px;">
+                <option value="">Tất cả năm</option>
+
+                @for (int i = 2025; i <= 2030; i++)
+                {
+                    <option value="@i"
+                            @(ViewBag.SelectedYear != null && (int)ViewBag.SelectedYear == i ? "selected" : "")>
+                        Năm @i
+                    </option>
+                }
+            </select>
+
+            <button type="submit" class="btn"
+                    style="background-color: #795548; color: white;">
+                Lọc doanh thu
+            </button>
+
+            @Html.ActionLink("Xóa lọc", "Index", null,
+                     new { @class = "btn btn-default" })
+        </div>
+    }
+
+
+    <table class="table table-bordered table-hover"
+           style="background-color: white;">
+        <thead style="background-color: #795548; color: white;">
+            <tr>
+                <th>Ngày hoàn thành</th>
+                <th>Doanh thu</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(item.Ngay.HasValue
+                            ? item.Ngay.Value.ToString("dd/MM/yyyy")
+                            : "")
+                    </td>
+                    <td>
+                        @item.DoanhThu.ToString("N0") đ
+                    </td>
+                </tr>
+            }
+
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="2" class="text-center">
+                        Chưa có dữ liệu doanh thu.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

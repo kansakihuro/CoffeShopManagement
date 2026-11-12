@@ -1,33 +1,102 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿
+@{
+    ViewBag.Title = "Dashboard";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<div style="background-color: #f8f3eb; padding: 25px; border-radius: 12px;">
+
+    <h2 style="color: #5c4033; font-weight: bold;">
+        Coffee Shop Dashboard
+    </h2>
+
+    <p style="color: #795548;">
+        Tổng quan hoạt động kinh doanh
+    </p>
 
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #795548;">
+                <h4>Tổng đơn hàng</h4>
+                <h2 style="color: #795548; font-weight: bold;">
+                    @ViewBag.TotalOrders
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #ff9800;">
+                <h4>Đơn đang xử lý</h4>
+                <h2 style="color: #ff9800; font-weight: bold;">
+                    @ViewBag.ProcessingOrders
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #2e7d32;">
+                <h4>Bàn còn trống</h4>
+                <h2 style="color: #2e7d32; font-weight: bold;">
+                    @ViewBag.AvailableTables
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #d32f2f;">
+                <h4>Bàn đang sử dụng</h4>
+                <h2 style="color: #d32f2f; font-weight: bold;">
+                    @ViewBag.OccupiedTables
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #00897b;">
+                <h4>Doanh thu hôm nay</h4>
+                <h2 style="color: #00897b; font-weight: bold;">
+                    @(((decimal)ViewBag.TodayRevenue).ToString("N0")) đ
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="background: white; padding: 20px;
+                        border-radius: 12px; margin-bottom: 20px;
+                        border-left: 5px solid #1565c0;">
+                <h4>Doanh thu tháng này</h4>
+                <h2 style="color: #1565c0; font-weight: bold;">
+                    @(((decimal)ViewBag.MonthRevenue).ToString("N0")) đ
+                </h2>
+            </div>
+        </div>
+
     </div>
-</main>
+
+    <div style="background: white; padding: 20px;
+                border-radius: 12px; margin-top: 10px;">
+        <h3 style="color: #5c4033;">Quản lý hệ thống</h3>
+
+        <p>
+            @Html.ActionLink("Quản lý đơn hàng", "Index", "Orders",
+                     null, new { @class = "btn btn-primary" })
+
+            @Html.ActionLink("Quản lý bàn", "Index", "CafeTables",
+                     null, new { @class = "btn btn-success" })
+
+            @Html.ActionLink("Báo cáo doanh thu", "Index", "Revenue",
+                     null, new { @class = "btn btn-warning" })
+        </p>
+    </div>
+
+</div>

@@ -1,74 +1,135 @@
-﻿@model CoffeShopManagement.Models.Order
+﻿
+@model CoffeShopManagement.Models.Order
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết đơn hàng";
+
+    decimal totalAmount = 0;
 }
 
-<h2>Details</h2>
+<h2>Chi tiết đơn hàng #@Model.OrderID</h2>
 
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.OrderType)
-        </dt>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4>Thông tin đơn hàng</h4>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrderType)
-        </dd>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>Loại đơn hàng</dt>
+            <dd>
+                @(Model.OrderType == "DineIn"
+                    ? "Dùng tại quán" : "Mang đi")
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.OrderStatus)
-        </dt>
+            <dt>Trạng thái</dt>
+            <dd>
+                @switch (Model.OrderStatus)
+                {
+                    case "New":
+                        @:Mới
+                        break;
+                    case "Preparing":
+                        @:Đang chuẩn bị
+                        break;
+                    case "Completed":
+                        @:Hoàn thành
+                        break;
+                    case "Cancelled":
+                        @:Đã hủy
+                        break;
+                    default:
+                        @Model.OrderStatus
+                        break;
+                }
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrderStatus)
-        </dd>
+            <dt>Thời gian tạo</dt>
+            <dd>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
+            <dt>Thời gian hoàn thành</dt>
+            <dd>
+                @(Model.CompletedAt.HasValue
+                    ? Model.CompletedAt.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                    : "Chưa hoàn thành")
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
+            <dt>Ghi chú</dt>
+            <dd>@Model.Notes</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CompletedAt)
-        </dt>
+            <dt>Bàn</dt>
+            <dd>
+                @(Model.CafeTable != null
+                    ? Model.CafeTable.TableName : "Không có bàn")
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.CompletedAt)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CafeTable.TableName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CafeTable.TableName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Staff.FullName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Staff.FullName)
-        </dd>
-
-    </dl>
+            <dt>Nhân viên</dt>
+            <dd>
+                @(Model.Staff != null
+                    ? Model.Staff.FullName : "")
+            </dd>
+        </dl>
+    </div>
 </div>
+
+<h3>Danh sách sản phẩm</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã chi tiết</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            decimal subTotal = item.Quantity * item.UnitPrice;
+            totalAmount += subTotal;
+
+            <tr>
+                <td>@item.OrderDetailID</td>
+
+                <td>
+                    @(item.Product != null
+                        ? item.Product.ProductName : "Không xác định")
+                </td>
+
+                <td>@item.Quantity</td>
+
+                <td>@item.UnitPrice.ToString("N0") đ</td>
+
+                <td>@subTotal.ToString("N0") đ</td>
+            </tr>
+        }
+
+        @if (!Model.OrderDetails.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">
+                    Đơn hàng chưa có sản phẩm.
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th colspan="4" class="text-right">Tổng tiền:</th>
+            <th>@totalAmount.ToString("N0") đ</th>
+        </tr>
+    </tfoot>
+</table>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Chỉnh sửa", "Edit",
+            new { id = Model.OrderID },
+            new { @class = "btn btn-primary" })
+
+    @Html.ActionLink("Quay lại danh sách", "Index",
+            null, new { @class = "btn btn-default" })
 </p>

@@ -1,0 +1,97 @@
+﻿
+@model IEnumerable<CoffeShopManagement.Models.OrderDetail>
+
+@{
+    ViewBag.Title = "Quản lý chi tiết đơn hàng";
+}
+
+<h2>Quản lý chi tiết đơn hàng</h2>
+
+<p>
+    @Html.ActionLink("+ Thêm chi tiết đơn hàng", "Create",
+            null, new { @class = "btn btn-primary" })
+</p>
+
+<!-- Tìm kiếm -->
+@using (Html.BeginForm("Index", "OrderDetails", FormMethod.Get))
+{
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-5">
+            <label>Tìm theo mã đơn hàng hoặc tên sản phẩm</label>
+
+            <input type="text"
+                   name="searchString"
+                   value="@ViewBag.SearchString"
+                   class="form-control"
+                   placeholder="Nhập mã đơn hoặc tên sản phẩm..." />
+        </div>
+
+        <div class="col-md-3" style="padding-top: 25px;">
+            <button type="submit" class="btn btn-success">
+                Tìm kiếm
+            </button>
+
+            @Html.ActionLink("Làm mới", "Index",
+                     null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+
+<!-- Danh sách chi tiết đơn hàng -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã chi tiết</th>
+            <th>Mã đơn hàng</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+            <th>Loại đơn</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.OrderDetailID</td>
+
+                <td>@item.OrderID</td>
+
+                <td>
+                    @(item.Product != null
+                        ? item.Product.ProductName : "Không xác định")
+                </td>
+
+                <td>@item.Quantity</td>
+
+                <td>@item.UnitPrice.ToString("N0") đ</td>
+
+                <td>@((item.Quantity * item.UnitPrice).ToString("N0")) đ</td>
+
+                <td>
+                    @(item.Order != null && item.Order.OrderType == "DineIn"
+                        ? "Dùng tại quán" : "Mang đi")
+                </td>
+
+                <td>
+                    @Html.ActionLink("Sửa", "Edit",
+                             new { id = item.OrderDetailID }) |
+
+                    @Html.ActionLink("Chi tiết", "Details",
+                             new { id = item.OrderDetailID }) |
+
+                    @Html.ActionLink("Xóa", "Delete",
+                             new { id = item.OrderDetailID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p class="text-danger">Không tìm thấy chi tiết đơn hàng phù hợp.</p>
+}
