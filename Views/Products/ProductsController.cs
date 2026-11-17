@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -14,33 +15,41 @@ namespace CoffeShopManagement.Controllers
     {
         private CoffeeShopManagementDBEntities db = new CoffeeShopManagementDBEntities();
 
-        // GET: Products
-        public ActionResult Index(string searchString, int? categoryId)
+        public ActionResult Index(string searchString, int? categoryId, string status)
         {
-            var products = db.Products.Include(p => p.Category);
+            var products = db.Products.Include(p => p.Category).AsQueryable();
 
-            // Tìm kiếm theo tên
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrWhiteSpace(searchString))
             {
-                products = products.Where(p =>
-                    p.ProductName.Contains(searchString));
+                string keyword = searchString.Trim();
+                products = products.Where(p => p.ProductName.Contains(keyword));
             }
 
-            // Lọc theo danh mục
             if (categoryId != null)
             {
-                products = products.Where(p =>
-                    p.CategoryID == categoryId);
+                products = products.Where(p => p.CategoryID == categoryId);
             }
 
-            // Danh sách danh mục cho dropdown
-            ViewBag.CategoryID = new SelectList(
-                db.Categories, "CategoryID", "CategoryName", categoryId);
+            if (status == "active")
+            {
+                products = products.Where(p => p.IsActive);
+            }
+            else if (status == "inactive")
+            {
+                products = products.Where(p => !p.IsActive);
+            }
 
-            return View(products.ToList());
+            ViewBag.CategoryID = new SelectList(
+                db.Categories.OrderBy(c => c.CategoryName),
+                "CategoryID", "CategoryName", categoryId);
+
+            ViewBag.Status = status;
+
+            return View(products.OrderBy(p => p.Category.CategoryName)
+                                .ThenBy(p => p.ProductName)
+                                .ToList());
         }
 
-        // GET: Products/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -55,20 +64,23 @@ namespace CoffeShopManagement.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
-            return View();
+            PopulateCategories(null);
+            return View(new Product { IsActive = true });
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProductID,CategoryID,ProductName,Price,IsActive")] Product product)
         {
+            if (product.ProductName != null)
+            {
+                product.ProductName = product.ProductName.Trim();
+            }
+
+            ValidateProduct(product);
+
             if (ModelState.IsValid)
             {
                 db.Products.Add(product);
@@ -76,11 +88,10 @@ namespace CoffeShopManagement.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+            PopulateCategories(product.CategoryID);
             return View(product);
         }
 
-        // GET: Products/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -92,28 +103,32 @@ namespace CoffeShopManagement.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+            PopulateCategories(product.CategoryID);
             return View(product);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProductID,CategoryID,ProductName,Price,IsActive")] Product product)
         {
+            if (product.ProductName != null)
+            {
+                product.ProductName = product.ProductName.Trim();
+            }
+
+            ValidateProduct(product);
+
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+
+            PopulateCategories(product.CategoryID);
             return View(product);
         }
 
-        // GET: Products/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -128,15 +143,67 @@ namespace CoffeShopManagement.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = db.Products.Find(id);
-            db.Products.Remove(product);
-            db.SaveChanges();
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Sản phẩm đã có trong đơn hàng thì không xóa được (ràng buộc khóa ngoại)
+            if (db.OrderDetails.Any(od => od.ProductID == id))
+            {
+                ModelState.AddModelError("",
+                    "Không thể xóa sản phẩm này vì đã có trong đơn hàng. Hãy sửa và bỏ chọn \"Đang kinh doanh\" để ngừng bán.");
+                return View("Delete", product);
+            }
+
+            try
+            {
+                db.Products.Remove(product);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Không thể xóa sản phẩm này vì đang được sử dụng ở nơi khác.");
+                return View("Delete", product);
+            }
             return RedirectToAction("Index");
+        }
+
+        private void ValidateProduct(Product product)
+        {
+            if (product.CategoryID > 0 && db.Categories.Find(product.CategoryID) == null)
+            {
+                ModelState.AddModelError("CategoryID", "Danh mục không tồn tại");
+            }
+
+            if (!String.IsNullOrEmpty(product.ProductName) && product.CategoryID > 0)
+            {
+                bool duplicated = db.Products.Any(p =>
+                    p.ProductID != product.ProductID &&
+                    p.CategoryID == product.CategoryID &&
+                    p.ProductName == product.ProductName);
+
+                if (duplicated)
+                {
+                    ModelState.AddModelError("ProductName",
+                        "Sản phẩm này đã tồn tại trong danh mục đã chọn");
+                }
+            }
+        }
+
+        private void PopulateCategories(int? selectedId)
+        {
+            var categories = db.Categories
+                .Where(c => c.IsActive || c.CategoryID == selectedId)
+                .OrderBy(c => c.CategoryName);
+
+            ViewBag.CategoryID = new SelectList(
+                categories, "CategoryID", "CategoryName", selectedId);
         }
 
         protected override void Dispose(bool disposing)

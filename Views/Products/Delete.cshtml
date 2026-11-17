@@ -79,6 +79,7 @@
 
 <div class="delete-container">
     <h2 class="delete-title">Xóa sản phẩm</h2>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <p class="delete-warning">
         Bạn có chắc chắn muốn xóa sản phẩm này không?

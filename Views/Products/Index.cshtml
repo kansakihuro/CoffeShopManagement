@@ -139,6 +139,19 @@
             new { @class = "btn-coffee" }
         )
     </div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
 
     <div class="search-box">
         @using (Html.BeginForm("Index", "Products", FormMethod.Get))
@@ -156,11 +169,38 @@
                 )
 
                 @Html.DropDownList(
-                    "categoryId",
-                    (SelectList)ViewBag.CategoryID,
-                    "Tất cả danh mục",
+       "categoryId",
+       (SelectList)ViewBag.CategoryID,
+       "Tất cả danh mục",
+       new { @class = "form-control" }
+   )
+
+                @Html.DropDownList(
+                    "status",
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "active", Text = "Đang bán", Selected = ((string)ViewBag.Status == "active") },
+                        new SelectListItem { Value = "inactive", Text = "Ngừng bán", Selected = ((string)ViewBag.Status == "inactive") }
+                    },
+                    "Tất cả trạng thái",
                     new { @class = "form-control" }
                 )
+                @Html.DropDownList(
+    "sortOrder",
+    new SelectList(new[]
+    {
+        new { Value = "", Text = "Mặc định" },
+        new { Value = "name_asc", Text = "Tên A-Z" },
+        new { Value = "name_desc", Text = "Tên Z-A" },
+        new { Value = "price_asc", Text = "Giá tăng dần" },
+        new { Value = "price_desc", Text = "Giá giảm dần" }
+    }, "Value", "Text", ViewBag.SortOrder),
+    new { @class = "form-control" }
+)
+
+                <button type="submit" class="btn-coffee">
+                    Tìm kiếm
+                </button>
 
                 <button type="submit" class="btn-coffee">
                     Tìm kiếm
@@ -241,6 +281,39 @@
             </tbody>
 
         </table>
+    </div>
+    <div style="margin-top:20px; text-align:center;">
+
+        <p>
+            Tổng sản phẩm: <strong>@ViewBag.TotalItems</strong>
+        </p>
+
+        @if (ViewBag.TotalPages != null && (int)ViewBag.TotalPages > 0)
+        {
+            for (int i = 1; i <= (ViewBag.TotalPages == null ? 0 : (int)ViewBag.TotalPages); i++)
+            {
+                @Html.ActionLink(
+                    i.ToString(),
+                    "Index",
+                    new
+                    {
+                        searchString = ViewBag.SearchString,
+                        categoryId = ViewBag.CategorySelected,
+                        sortOrder = ViewBag.SortOrder,
+                        page = i
+                    },
+                    new
+                    {
+                        @class = "btn " +
+                        ((int)ViewBag.CurrentPage == i
+                        ? "btn-primary"
+                        : "btn-default"),
+                        style = "margin:3px;"
+                    }
+                )
+            }
+        }
+
     </div>
 
 </div>
