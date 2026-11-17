@@ -88,22 +88,45 @@
         }
 
     .action-link a {
-        margin-right: 8px;
+        display: inline-block;
+        padding: 7px 12px;
+        margin: 3px 4px 3px 0;
+        border-radius: 6px;
         text-decoration: none;
         font-weight: bold;
+        font-size: 13px;
+        transition: 0.2s;
     }
 
     .edit-link {
-        color: #b07836;
+        background: #b07836;
+        color: white;
     }
+
+        .edit-link:hover {
+            background: #94602b;
+            color: white;
+        }
 
     .detail-link {
-        color: #397c91;
+        background: #397c91;
+        color: white;
     }
 
+        .detail-link:hover {
+            background: #286477;
+            color: white;
+        }
+
     .delete-link {
-        color: #bd4545;
+        background: #bd4545;
+        color: white;
     }
+
+        .delete-link:hover {
+            background: #982f2f;
+            color: white;
+        }
 
     .table-wrapper {
         overflow-x: auto;
@@ -192,7 +215,7 @@
                         </td>
 
                         <td>
-                            @Html.DisplayFor(modelItem => item.Price) đ
+                            @String.Format("{0:N0}", item.Price) đ
                         </td>
 
                         <td>
