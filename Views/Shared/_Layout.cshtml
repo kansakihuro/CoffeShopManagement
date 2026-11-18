@@ -212,22 +212,76 @@
 
         <ul class="sidebar-menu">
             <li>
-                @Html.ActionLink("📋  Đơn hàng", "Index", "Orders")
+                @Html.ActionLink(
+         "📋  Đơn hàng",
+         "Index", "Orders",
+         null,
+         new
+         {
+             @class = ViewContext.RouteData.Values["controller"].ToString() == "Orders"
+                 ? "active" : ""
+         }
+     )
             </li>
             <li>
-                @Html.ActionLink("🪑  Quản lý bàn", "Index", "CafeTables")
+                @Html.ActionLink(
+           "🪑  Quản lý bàn",
+           "Index", "CafeTables",
+           null,
+           new
+           {
+               @class = ViewContext.RouteData.Values["controller"].ToString() == "CafeTables"
+                   ? "active" : ""
+           }
+       )
             </li>
             <li>
-                @Html.ActionLink("☕  Sản phẩm", "Index", "Products")
+                @Html.ActionLink(
+          "☕  Sản phẩm",
+          "Index", "Products",
+          null,
+          new
+          {
+              @class = ViewContext.RouteData.Values["controller"].ToString() == "Products"
+                  ? "active" : ""
+          }
+      )
             </li>
             <li>
-                @Html.ActionLink("📂  Danh mục", "Index", "Categories")
+                @Html.ActionLink(
+          "📂  Danh mục",
+          "Index", "Categories",
+          null,
+          new
+          {
+              @class = ViewContext.RouteData.Values["controller"].ToString() == "Categories"
+                  ? "active" : ""
+          }
+      )
             </li>
             <li>
-                @Html.ActionLink("👥  Nhân viên", "Index", "Staffs")
+                @Html.ActionLink(
+           "👥  Nhân viên",
+           "Index", "Staffs",
+           null,
+           new
+           {
+               @class = ViewContext.RouteData.Values["controller"].ToString() == "Staffs"
+                   ? "active" : ""
+           }
+       )
             </li>
             <li>
-                @Html.ActionLink("🏠  Khu vực", "Index", "Areas")
+                @Html.ActionLink(
+          "🏠  Khu vực",
+          "Index", "Areas",
+          null,
+          new
+          {
+              @class = ViewContext.RouteData.Values["controller"].ToString() == "Areas"
+                  ? "active" : ""
+          }
+      )
             </li>
         </ul>
 
@@ -235,7 +289,16 @@
 
         <ul class="sidebar-menu">
             <li>
-                @Html.ActionLink("📊  Báo cáo doanh thu", "Index", "Revenue")
+                @Html.ActionLink(
+          "📊  Báo cáo doanh thu",
+          "Index", "Revenue",
+          null,
+          new
+          {
+              @class = ViewContext.RouteData.Values["controller"].ToString() == "Revenue"
+                  ? "active" : ""
+          }
+      )
             </li>
         </ul>
 

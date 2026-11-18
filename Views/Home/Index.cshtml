@@ -3,100 +3,284 @@
     ViewBag.Title = "Dashboard";
 }
 
-<div style="background-color: #f8f3eb; padding: 25px; border-radius: 12px;">
+<style>
+    .dashboard {
+        color: #3e3028;
+    }
 
-    <h2 style="color: #5c4033; font-weight: bold;">
-        Coffee Shop Dashboard
-    </h2>
+    .dashboard-header {
+        margin-bottom: 28px;
+    }
 
-    <p style="color: #795548;">
-        Tổng quan hoạt động kinh doanh
-    </p>
+        .dashboard-header h2 {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            color: #8b776b;
+            margin: 0;
+        }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #eee5dc;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 20px;
+        min-height: 145px;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(75,48,38,.08);
+        }
+
+    .stat-label {
+        color: #8b776b;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .stat-value {
+        font-size: 27px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .stat-icon {
+        float: right;
+        font-size: 25px;
+        background: #f8f3eb;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .quick-panel {
+        background: white;
+        border: 1px solid #eee5dc;
+        border-radius: 14px;
+        padding: 25px;
+        margin-top: 5px;
+    }
+
+        .quick-panel h3 {
+            font-size: 19px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+    .quick-link {
+        display: inline-block;
+        background: #f8f3eb;
+        color: #5c4033;
+        border: 1px solid #eadfd4;
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 0 8px 8px 0;
+        text-decoration: none;
+        font-weight: bold;
+        transition: .2s;
+    }
+
+        .quick-link:hover {
+            background: #4b3026;
+            color: white;
+            text-decoration: none;
+        }
+
+    .revenue-card {
+        background: #4b3026;
+        color: white;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 20px;
+        min-height: 145px;
+    }
+
+        .revenue-card .stat-label {
+            color: #e8d9cb;
+        }
+
+        .revenue-card .stat-value {
+            color: #f5dfc4;
+        }
+</style>
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+        <h2>Chào mừng đến với Coffee Shop ☕</h2>
+        <p>Tổng quan hoạt động kinh doanh của quán</p>
+    </div>
 
     <div class="row">
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #795548;">
-                <h4>Tổng đơn hàng</h4>
-                <h2 style="color: #795548; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="stat-card">
+                <span class="stat-icon">📋</span>
+                <div class="stat-label">Tổng đơn hàng</div>
+                <p class="stat-value" style="color:#795548;">
                     @ViewBag.TotalOrders
-                </h2>
+                </p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #ff9800;">
-                <h4>Đơn đang xử lý</h4>
-                <h2 style="color: #ff9800; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="stat-card">
+                <span class="stat-icon">⏳</span>
+                <div class="stat-label">Đơn đang xử lý</div>
+                <p class="stat-value" style="color:#ed8b24;">
                     @ViewBag.ProcessingOrders
-                </h2>
+                </p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #2e7d32;">
-                <h4>Bàn còn trống</h4>
-                <h2 style="color: #2e7d32; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="stat-card">
+                <span class="stat-icon">🪑</span>
+                <div class="stat-label">Bàn còn trống</div>
+                <p class="stat-value" style="color:#2e7d32;">
                     @ViewBag.AvailableTables
-                </h2>
+                </p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #d32f2f;">
-                <h4>Bàn đang sử dụng</h4>
-                <h2 style="color: #d32f2f; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="stat-card">
+                <span class="stat-icon">☕</span>
+                <div class="stat-label">Bàn đang sử dụng</div>
+                <p class="stat-value" style="color:#d32f2f;">
                     @ViewBag.OccupiedTables
-                </h2>
+                </p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #00897b;">
-                <h4>Doanh thu hôm nay</h4>
-                <h2 style="color: #00897b; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="revenue-card">
+                <span class="stat-icon">💰</span>
+                <div class="stat-label">Doanh thu hôm nay</div>
+                <p class="stat-value">
                     @(((decimal)ViewBag.TodayRevenue).ToString("N0")) đ
-                </h2>
+                </p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div style="background: white; padding: 20px;
-                        border-radius: 12px; margin-bottom: 20px;
-                        border-left: 5px solid #1565c0;">
-                <h4>Doanh thu tháng này</h4>
-                <h2 style="color: #1565c0; font-weight: bold;">
+        <div class="col-md-4 col-sm-6">
+            <div class="revenue-card">
+                <span class="stat-icon">📈</span>
+                <div class="stat-label">Doanh thu tháng này</div>
+                <p class="stat-value">
                     @(((decimal)ViewBag.MonthRevenue).ToString("N0")) đ
-                </h2>
+                </p>
             </div>
         </div>
 
     </div>
 
-    <div style="background: white; padding: 20px;
-                border-radius: 12px; margin-top: 10px;">
-        <h3 style="color: #5c4033;">Quản lý hệ thống</h3>
+    <div class="quick-panel">
+        <h3>Truy cập nhanh</h3>
 
-        <p>
-            @Html.ActionLink("Quản lý đơn hàng", "Index", "Orders",
-                     null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("📋 Quản lý đơn hàng",
+                      "Index", "Orders", null,
+                      new { @class = "quick-link" })
 
-            @Html.ActionLink("Quản lý bàn", "Index", "CafeTables",
-                     null, new { @class = "btn btn-success" })
+        @Html.ActionLink("🪑 Quản lý bàn",
+                      "Index", "CafeTables", null,
+                      new { @class = "quick-link" })
 
-            @Html.ActionLink("Báo cáo doanh thu", "Index", "Revenue",
-                     null, new { @class = "btn btn-warning" })
-        </p>
+        @Html.ActionLink("☕ Quản lý sản phẩm",
+                      "Index", "Products", null,
+                      new { @class = "quick-link" })
+
+        @Html.ActionLink("📂 Danh mục",
+                      "Index", "Categories", null,
+                      new { @class = "quick-link" })
+
+        @Html.ActionLink("👥 Nhân viên",
+                      "Index", "Staffs", null,
+                      new { @class = "quick-link" })
+
+        @Html.ActionLink("📊 Báo cáo doanh thu",
+                      "Index", "Revenue", null,
+                      new { @class = "quick-link" })
+    </div>
+
+    <div class="quick-panel" style="margin-top: 20px;">
+
+        <div style="display:flex; justify-content:space-between;
+                align-items:center; margin-bottom:20px;">
+
+            <h3 style="margin:0;">Đơn hàng gần đây</h3>
+
+            @Html.ActionLink("Xem tất cả →", "Index", "Orders",
+                     null, new { style = "color:#795548; font-weight:bold;" })
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr style="color:#8b776b;">
+                        <th>Mã đơn</th>
+                        <th>Loại đơn</th>
+                        <th>Trạng thái</th>
+                        <th>Thời gian tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in ViewBag.RecentOrders)
+                    {
+                        <tr>
+                            <td><strong>#@item.OrderID</strong></td>
+
+                            <td>
+                                @(item.OrderType == "DineIn"
+                                ? "Dùng tại quán" : "Mang đi")
+                            </td>
+
+                            <td>
+                                @switch ((string)item.OrderStatus)
+                                {
+                                    case "New":
+                                        <span class="label label-primary">Mới</span>
+                                        break;
+                                    case "Preparing":
+                                        <span class="label label-warning">Đang chuẩn bị</span>
+                                        break;
+                                    case "Completed":
+                                        <span class="label label-success">Hoàn thành</span>
+                                        break;
+                                    case "Cancelled":
+                                        <span class="label label-danger">Đã hủy</span>
+                                        break;
+                                }
+                            </td>
+
+                            <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+
+                            <td>
+                                @Html.ActionLink("Chi tiết", "Details", "Orders",
+                                         new { id = item.OrderID }, null)
+                            </td>
+                        </tr>
+                    }
+
+                    @if (ViewBag.RecentOrders.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Chưa có đơn hàng.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

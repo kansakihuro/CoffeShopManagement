@@ -24,11 +24,12 @@
     }
 
     .edit-card {
-        background: #f8f5f0;
-        padding: 25px;
-        border-radius: 10px;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        border: 1px solid #eee5dc;
+        box-shadow: 0 4px 15px rgba(75, 48, 38, 0.06);
     }
-
     .edit-page .form-group {
         margin-bottom: 20px;
     }
@@ -68,10 +69,21 @@
         }
 
     .btn-back {
+        display: inline-block;
+        background: #f3eee8;
         color: #6b4535;
-        margin-left: 15px;
+        padding: 10px 22px;
+        border-radius: 6px;
+        margin-left: 10px;
         text-decoration: none;
+        font-weight: bold;
     }
+
+        .btn-back:hover {
+            background: #e8ddd2;
+            color: #4b3026;
+            text-decoration: none;
+        }              
 </style>
 
 <div class="edit-page">
@@ -132,16 +144,17 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Price, "Giá sản phẩm")
 
-                @Html.EditorFor(
-                    model => model.Price,
-                    new
-                         {
-                             htmlAttributes = new
-                             {
-                        @class = "form-control",
-                        placeholder = "Nhập giá sản phẩm..."
-                    }}
-                )
+                @Html.TextBoxFor(
+    model => model.Price,
+    new
+    {
+        @class = "form-control",
+        type = "number",
+        step = "1",
+        min = "0",
+        placeholder = "Ví dụ: 200000"
+    }
+)
 
                 @Html.ValidationMessageFor(
                     model => model.Price,

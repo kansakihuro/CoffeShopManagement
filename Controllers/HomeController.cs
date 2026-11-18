@@ -15,6 +15,11 @@ namespace CoffeShopManagement.Controllers
 
         public ActionResult Index()
         {
+            // 5 đơn hàng gần đây
+            ViewBag.RecentOrders = db.Orders
+                .OrderByDescending(o => o.CreatedAt)
+                .Take(5)
+                .ToList();
             // Tổng số đơn hàng
             ViewBag.TotalOrders = db.Orders.Count();
 
